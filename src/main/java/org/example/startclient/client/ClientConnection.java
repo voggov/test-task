@@ -1,10 +1,7 @@
 package org.example.startclient.client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
@@ -52,8 +49,9 @@ public class ClientConnection {
             //TODO не забудь вернуть сука b.handler(new ClientInit());
             Channel channel = b.connect("localhost", 8081).sync().channel();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-            while (channel.isActive()){
 
+            while (channel.isActive()) {
+                channel.read();
             }
             /*ChannelFuture future = b.connect("localhost", 8081).sync();
             future.channel().closeFuture().sync();*/

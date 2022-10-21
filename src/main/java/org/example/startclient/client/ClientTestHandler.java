@@ -1,5 +1,7 @@
 package org.example.startclient.client;
 
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.example.game.Field;
@@ -16,6 +18,13 @@ public class ClientTestHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        ChannelFuture future = ctx.channel().closeFuture();
+        future.addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture future) throws Exception {
+                System.out.println("Вы отключены");
+            }
+        });
         System.out.println("Вы подключились к игре:");
         /* String  name = */
     }
@@ -23,9 +32,10 @@ public class ClientTestHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         Field field = (Field) msg;
+        System.out.println(field.getMessageFromServer());
         GameField gameField = new GameField(field.getField());
         gameField.printField();
-        System.out.println("Ваш ход:");
+/*        System.out.println("Ваш ход:");*/
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String step = reader.readLine();
         field.setStep(step);

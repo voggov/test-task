@@ -6,6 +6,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.example.game.Field;
 import org.example.game.GameField;
 import org.example.game.Player;
+import org.example.startserver.check.CheckClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +46,30 @@ public class ServerTestHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         Field field = (Field) msg;
         for (var i : players) {
+            CheckClass checkClass = new CheckClass(field.getStep(), gameField, i);
             if (i.getChannel().equals(ctx.channel())) {
+                if (!checkClass.checkCorrectStep()) {
+                    field.setMessageFromServer("Неккоректный ввод данных:\n Ваш ход:");
+                    field.setField(gameField.convertCharFieldToString());
+                    i.getChannel().writeAndFlush(field);
+                    return;
+                }
+                if (!checkClass.checkTakeField()){
+                    field.setMessageFromServer("Выбранное поле уже занято:\n Ваш ход:");
+                    field.setField(gameField.convertCharFieldToString());
+                    i.getChannel().writeAndFlush(field);
+                    return;
+                }
                 gameField.setSymbol(field.getStep(), i.getSymbol());
                 field.setField(gameField.convertCharFieldToString());
-                for (var k : players){
+                if (!checkClass.checkEndGame()){
+                    field.setMessageFromServer("Победил " + i.getName() + "(" + i.getSymbol() + ")!!!!");
+                    players.stream().forEach(player -> player.getChannel().writeAndFlush(field).channel().close());
+                    return;
+                }
+                for (var k : players) {
                     if (!k.getChannel().equals(ctx.channel())) {
+                        field.setMessageFromServer("Ваш ход:");
                         k.getChannel().writeAndFlush(field);
                     }
                 }

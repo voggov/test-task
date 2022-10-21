@@ -11,6 +11,8 @@ import java.io.Serializable;
 public class Field implements Serializable {
     private static Integer moveNumber = 0;
 
+    private String messageFromServer;
+
     private String step;
     private String field;
 
