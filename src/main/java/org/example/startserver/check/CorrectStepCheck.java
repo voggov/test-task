@@ -17,7 +17,7 @@ public class CorrectStepCheck implements CheckRool {
                         || Character.getNumericValue(step.charAt(1) - 1) == 1
                         || Character.getNumericValue(step.charAt(1) - 1) == 2)) {
             return true;
-        }else return false;
+        } else return false;
     }
 
 }

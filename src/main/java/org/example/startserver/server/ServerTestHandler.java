@@ -13,15 +13,18 @@ import java.util.List;
 
 public class ServerTestHandler extends ChannelInboundHandlerAdapter {
 
-    private static GameField gameField = new GameField();
+    private static final GameField gameField = new GameField();
     private static List<Channel> channels = new ArrayList<>();
     private static List<Player> players = new ArrayList<>();
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("connect");
-        if (channels.size() > 2) {
-            System.out.println("Игровая комната занята(");
+        if (channels.size() >= 2) {
+            Field message = new Field();
+            message.setMessageFromServer("Игровая комната занята");
+            System.out.println("Подключился 3 игрок");
+            ctx.channel().writeAndFlush(message);
             ctx.channel().close();
         } else {
             if (players.isEmpty()) {
@@ -54,7 +57,7 @@ public class ServerTestHandler extends ChannelInboundHandlerAdapter {
                     i.getChannel().writeAndFlush(field);
                     return;
                 }
-                if (!checkClass.checkTakeField()){
+                if (!checkClass.checkTakeField()) {
                     field.setMessageFromServer("Выбранное поле уже занято:\n Ваш ход:");
                     field.setField(gameField.convertCharFieldToString());
                     i.getChannel().writeAndFlush(field);
@@ -62,9 +65,9 @@ public class ServerTestHandler extends ChannelInboundHandlerAdapter {
                 }
                 gameField.setSymbol(field.getStep(), i.getSymbol());
                 field.setField(gameField.convertCharFieldToString());
-                if (!checkClass.checkEndGame()){
-                    field.setMessageFromServer("Победил " + i.getName() + "(" + i.getSymbol() + ")!!!!");
-                    players.stream().forEach(player -> player.getChannel().writeAndFlush(field).channel().close());
+                if (!checkClass.checkEndGame()) {
+                    field.setMessageFromServer("Победил " + field.getPlayerName() + "(" + i.getSymbol() + ")!!!!");
+                    players.forEach(player -> player.getChannel().writeAndFlush(field).channel().close());
                     return;
                 }
                 for (var k : players) {
@@ -76,13 +79,6 @@ public class ServerTestHandler extends ChannelInboundHandlerAdapter {
 
             }
         }
-
-
-        /*Message message = (Message) msg;
-        System.out.println(message);
-
-        message.setField("Huesosina");
-        ctx.writeAndFlush(message).addListener(ChannelFutureListener.CLOSE);*/
 
     }
 

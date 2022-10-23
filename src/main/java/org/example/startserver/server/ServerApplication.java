@@ -1,14 +1,14 @@
 package org.example.startserver.server;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringEncoder;
 
 public class ServerApplication {
-    private int port;
+    private final int port;
 
     public ServerApplication(int port) {
         this.port = port;
@@ -32,8 +32,6 @@ public class ServerApplication {
             bossGroup.shutdownGracefully();
         }
     }
-
-
 
 
 }

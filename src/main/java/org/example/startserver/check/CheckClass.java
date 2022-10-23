@@ -17,15 +17,17 @@ public class CheckClass {
     public boolean checkCorrectStep() {
         return new CorrectStepCheck(step).check(gameField, player);
     }
+
     public boolean checkEndGame() {
         EndGameCheck endGameCheck = new EndGameCheck();
         if (endGameCheck.checkVertical(gameField.getField(), player)
                 && endGameCheck.checkHorizontal(gameField.getField(), player)
-                && endGameCheck.checkDiagonal(gameField.getField(), player)){
+                && endGameCheck.checkDiagonal(gameField.getField(), player)) {
             return true;
         }
         return false;
     }
+
     public boolean checkTakeField() {
         return new TakeFieldCheck(step).check(gameField, player);
     }

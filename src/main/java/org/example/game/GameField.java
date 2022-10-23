@@ -3,7 +3,6 @@ package org.example.game;
 import lombok.Getter;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 
 @Getter
@@ -13,12 +12,8 @@ public class GameField implements Serializable {
 
     public GameField(String field) {
         int count = 0;
-       /* field = "  A B C\n" +
-                "1 _ _ _\n" +
-                "2 _ _ _\n" +
-                "3 _ _ _";*/
         for (int i = 0; i < SIZE; i++) {
-            for (int k = 0; k <SIZE;k++) {
+            for (int k = 0; k < SIZE; k++) {
                 this.field[i][k] = field.charAt(count);
                 count++;
             }
@@ -57,7 +52,7 @@ public class GameField implements Serializable {
     public void setSymbol(String xy, Character symbol) {
         int x = 0;
         int y = 0;
-        x = Character.getNumericValue(xy.charAt(1)-1);
+        x = Character.getNumericValue(xy.charAt(1) - 1);
         switch (xy.charAt(0)) {
             case 'A':
                 y = 0;

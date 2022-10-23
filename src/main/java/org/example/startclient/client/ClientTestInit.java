@@ -6,6 +6,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
 
 public class ClientTestInit extends ChannelInitializer<SocketChannel> {
     @Override
@@ -14,5 +17,6 @@ public class ClientTestInit extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new ObjectEncoder());
         pipeline.addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
         pipeline.addLast(new ClientTestHandler());
+        pipeline.addLast(new IdleStateHandler(60l, 30l, 0, TimeUnit.SECONDS));
     }
 }
